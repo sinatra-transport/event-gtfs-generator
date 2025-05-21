@@ -1,6 +1,7 @@
 import datetime
 
 import isodate
+from isodate import Duration
 from petitparser import character as c
 
 from models import DayOfWeek, DatePeriod, TimePeriod, ServiceTiming, StopTravelTime
@@ -24,10 +25,10 @@ time_part = c.digit().times(2).flatten().map(lambda x: int(x))
 t_separator = c.of(':')
 
 time = ((hour_part & t_separator & time_part & (t_separator & time_part).optional())
-        .map(lambda x: datetime.time(
-            hour=x[0],
-            minute=x[2],
-            second=x[4] if len(x) > 4 else 0
+        .map(lambda x: Duration(
+            hours=x[0],
+            minutes=x[2],
+            seconds=x[4] if len(x) > 4 else 0
         )))
 time_period = ((time & d_separator & time) | time).map(lambda x: TimePeriod.from_array(x))
 
@@ -42,7 +43,7 @@ duration = ((c.of("P") &
               (c.digit().repeat(1, 2) & c.of("H")).optional() &
               (c.digit().repeat(1, 2) & c.of("M")).optional() &
               (c.digit().repeat(1, 2) & c.of("S")).optional()).optional())
-).flatten().map(lambda x: isodate.parse_duration(x))
+).flatten().map(lambda x: isodate.parse_duration(x, as_timedelta_if_possible=False))
 
 event_time_definition = (
         date_period & i_separator &
@@ -60,5 +61,5 @@ stop_id = (c.digit() | c.letter()).plus().flatten()
 stop_travel_time = (stop_id & (c.of(":") & duration).optional()).map(lambda x: StopTravelTime.from_array(x))
 stop_sequence = (stop_travel_time.separated_by(c.of(","))).plus().map(lambda x: x[0][0::2])
 
-print(event_time_definition.parse("2025-05-10-2025-05-12//10:12-13:12/PT20M").value)
-print(stop_sequence.parse("asd122:PT12H,rffr2212,rffr2212"))
+# print(event_time_definition.parse("2025-05-10-2025-05-12//10:12-13:12/PT20M").value)
+# print(stop_sequence.parse("asd122:PT12H,rffr2212,rffr2212"))

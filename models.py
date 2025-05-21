@@ -1,7 +1,6 @@
 import datetime
 from dataclasses import dataclass
-from time import strftime
-from typing import Optional
+from typing import Optional, List
 
 from isodate import Duration
 
@@ -15,6 +14,23 @@ class DayOfWeek:
     friday: bool
     saturday: bool
     sunday: bool
+
+    def allowed(self, weekday: int) -> bool:
+        if weekday == 0 and self.monday:
+            return True
+        elif weekday == 1 and self.tuesday:
+            return True
+        elif weekday == 2 and self.wednesday:
+            return True
+        elif weekday == 3 and self.thursday:
+            return True
+        elif weekday == 4 and self.friday:
+            return True
+        elif weekday == 5 and self.saturday:
+            return True
+        elif weekday == 6 and self.saturday:
+            return True
+        return False
 
     @staticmethod
     def from_array(x) -> "DayOfWeek":
@@ -42,7 +58,7 @@ class DayOfWeek:
 
 @dataclass
 class DatePeriod:
-    start: datetime.date
+    start: Duration
     end: Optional[datetime.date]
 
     @staticmethod
@@ -55,8 +71,8 @@ class DatePeriod:
 
 @dataclass
 class TimePeriod:
-    start: datetime.time
-    end: Optional[datetime.time]
+    start: Duration
+    end: Optional[Duration]
 
     @staticmethod
     def from_array(x) -> "TimePeriod":
@@ -93,3 +109,20 @@ class StopTravelTime:
             return StopTravelTime(x[0], None)
         else:
             return StopTravelTime(x[0], x[1][1])
+
+
+@dataclass
+class RouteInformation:
+    route_id: Optional[str]
+    short_name: str
+    long_name: str
+    color: str
+    light_text_color: bool
+
+
+@dataclass
+class EventRoute:
+    info: RouteInformation
+    timing: ServiceTiming
+    stops: List[StopTravelTime]
+
