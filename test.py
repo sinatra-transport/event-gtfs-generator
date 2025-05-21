@@ -15,4 +15,4 @@ if __name__ == "__main__":
             event_time_definition.parse("2025-05-10-2025-05-12//10:12-13:12/PT20M").value,
             stop_sequence.parse("asd122:PT1M,rffr2212,rffr22").value
         )
-    )._generate_stop_times("stop_times.txt")
+    ).generate("./output")
