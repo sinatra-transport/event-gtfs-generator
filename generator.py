@@ -35,6 +35,7 @@ class Generator:
         self._generate_stop_times(path)
         self._generate_trips(path)
         self._generate_calendar(path)
+        self._generate_routes(path)
 
     def _generate_trips(self, path: PathLike | str):
         output = []
@@ -53,16 +54,6 @@ class Generator:
 
         df = pd.DataFrame(output)
         df.to_csv(Path(path).joinpath("trips.txt"), index=False)
-        # day = self.model.timing.datePeriod.start
-        # while day < self.model.timing.datePeriod.end:
-        #     if not self.model.timing.dayOfWeek.allowed(day.weekday()):
-        #         day += datetime.timedelta(days=1)
-        #         continue
-        #
-        #
-        #
-        #     day += datetime.timedelta(days=1)
-        # pass
 
     def _generate_stop_times(self, path: PathLike | str):
         output = []
@@ -96,6 +87,20 @@ class Generator:
         self._trip_count = counter
         df = pd.DataFrame(output)
         df.to_csv(Path(path).joinpath("stop_times.txt"), index=False)
+
+    def _generate_routes(self, path: PathLike | str):
+        output = [{
+            "route_id": self.model.info.route_id,
+            "route_short_name": self.model.info.short_name,
+            "route_long_name": self.model.info.long_name,
+            "route_type": "3",
+            "route_color": self.model.info.color,
+            "route_text_color": "FFFFFF" if self.model.info.light_text_color else "000000",
+            "route_url": "https://www.transport.act.gov.au/getting-around/timetables/routes-by-number",
+            "agency_id": "TC"
+        }]
+        df = pd.DataFrame(output)
+        df.to_csv(Path(path).joinpath("routes.txt"), index=False)
 
     def _generate_calendar(self, path: PathLike | str):
         output = [{
