@@ -5,6 +5,18 @@ from typing import Optional, List
 from isodate import Duration
 
 
+def _dow_str_value(b: bool) -> str:
+    return "1" if b else "0"
+
+
+def _date_str_value(d: datetime.date) -> str:
+    return "".join([
+        f"{d.year}".zfill(4),
+        f"{d.month}".zfill(2),
+        f"{d.day}".zfill(2),
+    ])
+
+
 @dataclass
 class DayOfWeek:
     monday: bool
@@ -32,6 +44,17 @@ class DayOfWeek:
             return True
         return False
 
+    def dict(self) -> dict[str, str]:
+        return {
+            "monday": _dow_str_value(self.monday),
+            "tuesday": _dow_str_value(self.tuesday),
+            "wednesday": _dow_str_value(self.wednesday),
+            "thursday": _dow_str_value(self.thursday),
+            "friday": _dow_str_value(self.friday),
+            "saturday": _dow_str_value(self.saturday),
+            "sunday": _dow_str_value(self.sunday),
+        }
+
     @staticmethod
     def from_array(x) -> "DayOfWeek":
         if x:
@@ -58,7 +81,7 @@ class DayOfWeek:
 
 @dataclass
 class DatePeriod:
-    start: Duration
+    start: datetime.date
     end: Optional[datetime.date]
 
     @staticmethod

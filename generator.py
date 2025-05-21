@@ -6,7 +6,7 @@ from typing import List
 import pandas as pd
 from isodate import Duration
 
-from models import EventRoute
+from models import EventRoute, _date_str_value
 
 
 def _sum_time(times: List[Duration]) -> Duration:
@@ -34,7 +34,7 @@ class Generator:
     def generate(self, path: PathLike | str):
         self._generate_stop_times(path)
         self._generate_trips(path)
-        pass
+        self._generate_calendar(path)
 
     def _generate_trips(self, path: PathLike | str):
         output = []
@@ -96,4 +96,14 @@ class Generator:
         self._trip_count = counter
         df = pd.DataFrame(output)
         df.to_csv(Path(path).joinpath("stop_times.txt"), index=False)
+
+    def _generate_calendar(self, path: PathLike | str):
+        output = [{
+            "service_id": f"{self.model.info.route_id}_service",
+        } | self.model.timing.dayOfWeek.dict() | {
+            "start_date": _date_str_value(self.model.timing.datePeriod.start),
+            "end_date": _date_str_value(self.model.timing.datePeriod.end),
+        }]
+        df = pd.DataFrame(output)
+        df.to_csv(Path(path).joinpath("calendar.txt"), index=False)
 
