@@ -14,10 +14,10 @@ if __name__ == "__main__":
                 _on_color_light("dc177a")
             ),
             [
-                event_time_definition.parse("2025-09-13-2025-10-12/1111100/09:00-17:15/PT40M").value,
-                event_time_definition.parse("2025-09-13-2025-10-12/0000011/09:00-17:15/PT20M").value,
-                event_time_definition.parse("2025-09-29-2025-10-02/1111111/18:00-22:45/PT20M").value
+                event_time_definition.parse("2025-09-13-2025-10-12/1111100/09:00-17:55/PT40M").value,
+                event_time_definition.parse("2025-09-13-2025-10-12/0000011/09:00-17:35/PT20M").value,
+                event_time_definition.parse("2025-09-29-2025-10-02/1111111/18:00-23:05/PT20M").value
             ],
-            stop_sequence.parse("temp_floriade_mooseheads,3052,3356,temp_floriade_regatta").value
+            stop_sequence.parse("temp_floriade_mooseheads:PT5M,3052:PT5M,3356:PT5M,temp_floriade_regatta:PT5M").value
         )
     ).generate("./output")
