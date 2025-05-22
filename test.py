@@ -13,7 +13,11 @@ if __name__ == "__main__":
                 "dc177a",
                 _on_color_light("dc177a")
             ),
-            event_time_definition.parse("2025-09-13-2025-10-12/1111100/09:00-17:15/PT40M").value,
+            [
+                event_time_definition.parse("2025-09-13-2025-10-12/1111100/09:00-17:15/PT40M").value,
+                event_time_definition.parse("2025-09-13-2025-10-12/0000011/09:00-17:15/PT20M").value,
+                event_time_definition.parse("2025-09-29-2025-10-02/1111111/18:00-22:45/PT20M").value
+            ],
             stop_sequence.parse("temp_floriade_mooseheads,3052,3356,temp_floriade_regatta").value
         )
     ).generate("./output")

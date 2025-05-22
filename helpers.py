@@ -19,6 +19,10 @@ def _sum_time(times: List[Duration]) -> Duration:
     return out
 
 
+def _div_time(time: Duration, amount: int) -> Duration:
+    return Duration(seconds=time.tdelta.total_seconds() // amount)
+
+
 def _time_output(time: Duration) -> str:
     return ":".join([
         f"{time.tdelta.seconds // 3600}".zfill(2),

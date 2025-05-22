@@ -148,6 +148,6 @@ class RouteInformation:
 @dataclass
 class EventRoute:
     info: RouteInformation
-    timing: ServiceTiming
+    timing: List[ServiceTiming]
     stops: List[StopTravelTime]
 
