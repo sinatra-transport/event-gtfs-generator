@@ -45,6 +45,17 @@ class DayOfWeek:
             "sunday": _dow_str_value(self.sunday),
         }
 
+    def id(self) -> str:
+        return "".join([
+            _dow_str_value(self.monday),
+            _dow_str_value(self.tuesday),
+            _dow_str_value(self.wednesday),
+            _dow_str_value(self.thursday),
+            _dow_str_value(self.friday),
+            _dow_str_value(self.saturday),
+            _dow_str_value(self.sunday),
+        ])
+
     @staticmethod
     def from_array(x) -> "DayOfWeek":
         if x:
@@ -104,9 +115,10 @@ class ServiceTiming:
 
     def id(self, route_id: str) -> str:
         elements = [
-            self.datePeriod.start.strftime('%Y-%m-%d'),
-            self.datePeriod.end.strftime('%Y-%m-%d') if self.datePeriod.end else None,
-            route_id
+            route_id,
+            self.datePeriod.start.strftime('%Y%m%d'),
+            self.datePeriod.end.strftime('%Y%m%d') if self.datePeriod.end else None,
+            self.dayOfWeek.id()
         ]
         return '-'.join(list(filter(lambda x: x is not None, elements)))
 

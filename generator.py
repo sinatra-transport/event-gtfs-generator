@@ -29,7 +29,7 @@ class Generator:
         for i in range(0, self._trip_count - 1):
             output.append({
                 "route_id": self.model.info.route_id,
-                "service_id": f"{self.model.info.route_id}_service",
+                "service_id": self.model.timing.id(self.model.info.route_id),
                 "trip_id": f"{self.model.info.route_id}_{i}",
                 "trip_headsign": self.model.info.short_name,
                 "direction_id": "1",
@@ -90,7 +90,7 @@ class Generator:
 
     def _generate_calendar(self, path: PathLike | str):
         output = [{
-            "service_id": f"{self.model.info.route_id}_service",
+            "service_id": self.model.timing.id(self.model.info.route_id),
         } | self.model.timing.dayOfWeek.dict() | {
             "start_date": _date_str_value(self.model.timing.datePeriod.start),
             "end_date": _date_str_value(self.model.timing.datePeriod.end),
