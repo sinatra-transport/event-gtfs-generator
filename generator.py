@@ -31,11 +31,11 @@ class Generator:
         output = []
 
         for i, timing in enumerate(self.model.timing):
-            for j in range(0, self._trip_count[i] - 1):
+            for j in range(0, self._trip_count[i]):
                 output.append({
                     "route_id": self.model.info.route_id,
                     "service_id": timing.id(self.model.info.route_id),
-                    "trip_id": f"{self.model.info.route_id}_{j}_{i}",
+                    "trip_id": f"{self.model.info.route_id}_{i}_{j}",
                     "trip_headsign": self.model.info.short_name,
                     "direction_id": "1",
                     "shape_id": f"{self.model.info.route_id}_shape",
