@@ -1,12 +1,13 @@
 import datetime
 from os import PathLike
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 
 import pandas as pd
+from isodate import Duration
 
 from helpers import _sum_time, _time_output, _date_str_value, _div_time
-from models import EventRoute
+from models import EventRoute, StopTravelTime
 
 
 class Generator:
@@ -24,6 +25,7 @@ class Generator:
         self._generate_calendar_dates(path)
         self._generate_routes(path)
         self._generate_stops(path)
+        self._generate_shapes(path)
 
     def _generate_trips(self, path: PathLike | str):
         output = []
@@ -44,6 +46,26 @@ class Generator:
         df = pd.DataFrame(output)
         df.to_csv(Path(path).joinpath("trips.txt"), index=False)
 
+    def _stop_time_model(
+            self,
+            timing_i: int,
+            stop_i: int,
+            counter: int,
+            stop: StopTravelTime,
+            current: Duration
+    ) -> Dict:
+        return {
+            "trip_id": f"{self.model.info.route_id}_{timing_i}_{counter}",
+            "arrival_time": _time_output(current),
+            "departure_time": _time_output(current),
+            "stop_id": stop.stop_id,
+            "stop_sequence": f"{stop_i}",
+            "stop_headsign": self.model.info.short_name,
+            "pickup_type": "0",
+            "drop_off_type": "0",
+            "timepoint": "0"
+        }
+
     def _generate_stop_times(self, path: PathLike | str):
         output = []
         comp = datetime.datetime.fromtimestamp(0)
@@ -58,21 +80,28 @@ class Generator:
                 ), max(1, len(list(filter(lambda x: x.travel_time is None, self.model.stops)))))
                 current = time
                 for j, stop in enumerate(self.model.stops):
-                    output.append({
-                        "trip_id": f"{self.model.info.route_id}_{i}_{counter}",
-                        "arrival_time": _time_output(current),
-                        "departure_time": _time_output(current),
-                        "stop_id": stop.stop_id,
-                        "stop_sequence": f"{j}",
-                        "stop_headsign": self.model.info.short_name,
-                        "pickup_type": "0",
-                        "drop_off_type": "0",
-                        "timepoint": "0"
-                    })
+                    output.append(self._stop_time_model(
+                        timing_i=i,
+                        stop_i=j,
+                        counter=counter,
+                        stop=stop,
+                        current=current,
+                    ))
                     current += increment if stop.travel_time is None else stop.travel_time
 
-                counter += 1
                 time += timing.repetitionDuration
+
+                if self.model.is_loop:
+                    output.append(self._stop_time_model(
+                        timing_i=i,
+                        stop_i=len(self.model.stops),
+                        counter=counter,
+                        stop=self.model.stops[0],
+                        current=time,
+                    ))
+
+                counter += 1
+
             self._trip_count.append(counter)
         df = pd.DataFrame(output)
         df.to_csv(Path(path).joinpath("stop_times.txt"), index=False)
@@ -122,3 +151,7 @@ class Generator:
 
         df = pd.DataFrame(output)
         df.to_csv(Path(path).joinpath("stops.txt"), index=False)
+
+    def _generate_shapes(self, path: PathLike | str):
+        with Path(path).joinpath("shapes.txt").open("w") as f:
+            f.write("shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence")

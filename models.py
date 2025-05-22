@@ -150,4 +150,5 @@ class EventRoute:
     info: RouteInformation
     timing: List[ServiceTiming]
     stops: List[StopTravelTime]
+    is_loop: bool = True
 

@@ -8,8 +8,8 @@ if __name__ == "__main__":
         EventRoute(
             RouteInformation(
                 "floriade_2025_test",
-                "Floriade",
-                "Floriade 2025",
+                "F1",
+                "TEST Floriade 2025 Free Shuttle Loop",
                 "dc177a",
                 _on_color_light("dc177a")
             ),
