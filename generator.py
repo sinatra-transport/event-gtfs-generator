@@ -1,27 +1,11 @@
 import datetime
 from os import PathLike
 from pathlib import Path
-from typing import List
 
 import pandas as pd
-from isodate import Duration
 
-from models import EventRoute, _date_str_value
-
-
-def _sum_time(times: List[Duration]) -> Duration:
-    out = Duration()
-    for time in times:
-        out += time
-
-    return out
-
-
-def _time_output(time: Duration) -> str:
-    return ":".join([
-        f"{time.tdelta.seconds // 3600}".zfill(2),
-        f"{(time.tdelta.seconds // 60) % 60}".zfill(2),
-    ])
+from helpers import _sum_time, _time_output, _date_str_value
+from models import EventRoute
 
 
 class Generator:

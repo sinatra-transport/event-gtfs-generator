@@ -4,17 +4,7 @@ from typing import Optional, List
 
 from isodate import Duration
 
-
-def _dow_str_value(b: bool) -> str:
-    return "1" if b else "0"
-
-
-def _date_str_value(d: datetime.date) -> str:
-    return "".join([
-        f"{d.year}".zfill(4),
-        f"{d.month}".zfill(2),
-        f"{d.day}".zfill(2),
-    ])
+from helpers import _dow_str_value
 
 
 @dataclass
