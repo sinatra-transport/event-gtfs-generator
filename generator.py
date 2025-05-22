@@ -21,6 +21,7 @@ class Generator:
         self._generate_calendar(path)
         self._generate_calendar_dates(path)
         self._generate_routes(path)
+        self._generate_stops(path)
 
     def _generate_trips(self, path: PathLike | str):
         output = []
@@ -100,3 +101,19 @@ class Generator:
     def _generate_calendar_dates(self, path: PathLike | str):
         with Path(path).joinpath("calendar_dates.txt").open("w") as f:
             f.write("service_id,date,exception_type")
+
+    def _generate_stops(self, path: PathLike | str):
+        output = []
+        for stop in self.model.stops:
+            output.append({
+                "stop_id": stop.stop_id,
+                "stop_name": "",
+                "stop_lat": "",
+                "stop_lon": "",
+                "location_type": "0",
+                "wheelchair_boarding": "0",
+                "parent_station": ""
+            })
+
+        df = pd.DataFrame(output)
+        df.to_csv(Path(path).joinpath("stops.txt"), index=False)
