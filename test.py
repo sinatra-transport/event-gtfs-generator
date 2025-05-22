@@ -7,13 +7,13 @@ if __name__ == "__main__":
     Generator(
         EventRoute(
             RouteInformation(
-                "test",
-                "Test Event",
-                "Long Test Event",
-                "131222",
-                _on_color_light("131222")
+                "floriade_2025_test",
+                "Floriade",
+                "Floriade 2025",
+                "dc177a",
+                _on_color_light("dc177a")
             ),
-            event_time_definition.parse("2025-05-10-2025-05-12//10:12-13:12/PT20M").value,
-            stop_sequence.parse("asd122:PT1M,rffr2212,rffr22").value
+            event_time_definition.parse("2025-09-13-2025-10-12/1111100/09:00-17:15/PT40M").value,
+            stop_sequence.parse("temp_floriade_mooseheads,3052,3356,temp_floriade_regatta").value
         )
     ).generate("./output")

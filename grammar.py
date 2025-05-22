@@ -57,7 +57,7 @@ event_time_definition = (
     x[6]
 ))
 
-stop_id = (c.digit() | c.letter()).plus().flatten()
+stop_id = (c.digit() | c.letter() | c.any_of("_-")).plus().flatten()
 stop_travel_time = (stop_id & (c.of(":") & duration).optional()).map(lambda x: StopTravelTime.from_array(x))
 stop_sequence = (stop_travel_time.separated_by(c.of(","))).plus().map(lambda x: x[0][0::2])
 
