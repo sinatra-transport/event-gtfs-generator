@@ -55,7 +55,7 @@ class Generator:
                 increment = _div_time((
                         timing.repetitionDuration -
                         _sum_time([x.travel_time for x in self.model.stops if x.travel_time is not None])
-                ), len(self.model.stops))
+                ), max(1, len(list(filter(lambda x: x.travel_time is None, self.model.stops)))))
                 current = time
                 for j, stop in enumerate(self.model.stops):
                     output.append({
